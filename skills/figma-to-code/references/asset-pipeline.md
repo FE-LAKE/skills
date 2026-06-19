@@ -11,7 +11,7 @@ Step 5 内部 reference：转码流程中下载图标/图片/SVG 时用；不单
 ## Framelink 分支
 
 1. 读 `download_figma_images` schema
-2. `localPath`：默认 `public/images` 或用户指定；图标常用 `public/icons`
+2. `localPath`：用户指定优先；否则扫描并沿用项目现有同类资产目录（如 `src/assets`、`public/assets`、`assets/images`、`public/images` 等）。无法判断时询问用户；图标同理，优先沿用现有 icons/assets 目录。
 3. 含 `imageRef` 时必须传入；SVG 矢量可省略
 4. 代码中必须真实引用；失败停止或经用户同意标记 `placeholder (user-approved)`
 
@@ -24,10 +24,6 @@ Step 5 内部 reference：转码流程中下载图标/图片/SVG 时用；不单
 ## 批量去重
 
 多 URL/多页面时按资源 URL 或 imageRef 去重，相同资源只下载一次。
-
-## 图标入口（可选）
-
-用户要求 SVGR 集成时，生成 `components/icons/index.ts` 统一 export。
 
 ## 输出
 

@@ -6,7 +6,8 @@
       "title": "Figma",
       "description": "Convert Figma designs to production code and run an integrated visual review phase.",
       "skills": [
-        "figma-to-code"
+        "figma-to-code",
+        "figma-review-phase"
       ]
     }
   ]

@@ -50,6 +50,31 @@ Agent 执行 `figma-to-code` 时应遵守以下策略。这里不是用户说明
 
 ## Review Phase Handoff
 
-代码生成、资产处理、lint/typecheck 结束后进入 review phase。先生成 review brief，包含 Figma URL、修改文件、dev URL、视口、技术栈、assumptions 与校验结果。
+代码生成、资产处理、lint/typecheck 结束后进入 review phase。先生成固定格式 review brief，再交给 review executor。
 
-若宿主支持 subagent 或等价隔离执行能力，优先把 review brief 交给隔离执行。若不支持，则在当前会话中按同一份 brief 执行独立评审步骤。当前会话 fallback 时，不要沿用生成阶段的视觉猜测；只使用 brief、Figma 参照、实现截图与代码证据做判断。
+Executor 选择顺序：
+
+1. 若宿主支持 `context: fork` skill，优先调用内部 helper `figma-review-phase`，只传 review brief。
+2. 若 helper 不可用，但宿主支持 subagent 或等价隔离执行能力，把同一份 brief 交给隔离执行。
+3. 若隔离能力不可用，在当前会话按同一份 brief 执行独立评审步骤。
+
+不要给整个 `figma-to-code` skill 加 `context: fork`。`context: fork` 的粒度是整个 skill，不是单个 phase；若加在主 skill 上，生成阶段和 review phase 会进入同一个子上下文，无法只隔离 review phase。
+
+Review brief 必须包含：
+
+- `mode`: `generate` 或 `review-only`
+- `figmaUrl`
+- `nodeId`
+- `modifiedFiles`
+- `devCommand`
+- `devUrl` 或 `route`
+- `viewport`
+- `techStack`
+- `assumptions`
+- `assetsSummary`
+- `tokensSummary`
+- `lintTypecheckResult`
+- `allowedFixScope`: 必须为 `visual-only`
+- `blockedConditions`: business logic、API、routing、state model、persistence、public component API
+
+当前会话 fallback 时，不要沿用生成阶段的视觉猜测；只使用 brief、Figma 参照、实现截图与代码证据做判断。
