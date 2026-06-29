@@ -9,6 +9,13 @@
         "figma-to-code",
         "figma-review-phase"
       ]
+    },
+    {
+      "title": "Task Workflow",
+      "description": "Work with personal task boards through REST APIs.",
+      "skills": [
+        "personal-task-agent"
+      ]
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Agent Skills
 
-可分享的 [Agent Skills](https://agentskills.io/) 集合，专注 **Figma 设计稿 → 生产代码 → 视觉评审优化** 工作流。结构参考 [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)。
+可分享的 [Agent Skills](https://agentskills.io/) 集合，包含 **Figma 设计稿 → 生产代码 → 视觉评审优化** 与个人任务看板工作流。结构参考 [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)。
 
 [![skills.sh](https://skills.sh/b/fe-lake/skills)](https://skills.sh/fe-lake/skills)
 
@@ -20,6 +20,10 @@
 ### figma-review-phase
 
 内部 helper skill。它接收 `figma-to-code` 生成的固定 review brief，在 `context: fork` 隔离上下文中执行截图对比、视觉评审、自动修复与复查。通常不要直接调用它；用户的转码和验收请求仍由 `figma-to-code` 接住。
+
+### personal-task-agent
+
+处理外部任务看板上的个人任务工作流。Agent 可读取我负责的任务/需求、总结详情、添加评论，并在确认后新建任务或推进任务/需求状态；第一版 provider 适配悦达任务看板 REST API。
 
 ## 推荐工作流
 
@@ -51,11 +55,17 @@ npx skills add fe-lake/skills --skill figma-to-code
 npx skills add fe-lake/skills --skill figma-review-phase
 ```
 
+安装个人任务助手 skill：
+
+```bash
+npx skills add fe-lake/skills --skill personal-task-agent
+```
+
 其他支持 Agent Skills 的宿主可按各自文档安装 `skills/figma-to-code`；完整 workflow 需要 `skills/figma-review-phase` 同时可用。
 
 ## Usage
 
-安装后 skill 会在相关任务时由 Agent 自动激活。
+安装后，支持模型调用的 skill 会在相关任务时由 Agent 自动激活。`personal-task-agent` 已禁用模型自动触发，需要手动调用。
 
 **转码示例：**
 
@@ -68,6 +78,18 @@ npx skills add fe-lake/skills --skill figma-review-phase
 
 ```
 对比登录页与设计稿还原度，dev 地址 http://localhost:5173/login
+```
+
+**悦达任务示例：**
+
+```
+看看我当前未完成的悦达任务，并按优先级总结今天建议处理顺序
+```
+
+首次使用前，在当前项目根目录创建本地 `.skills.env`：
+
+```dotenv
+YUEDA_TASK_TOKEN=ydk_xxxxx
 ```
 
 **文件头约定**（视觉评审可自动发现页面）：
@@ -85,6 +107,10 @@ npx skills add fe-lake/skills --skill figma-review-phase
 `figma-to-code` 需配置 Framelink Figma MCP、Chrome DevTools MCP 与 Figma API token。安装包内自带配置说明：
 
 - [figma-to-code/references/mcp-setup.md](./skills/figma-to-code/references/mcp-setup.md)
+
+`personal-task-agent` 第一版 provider 需配置悦达任务看板个人 API token：
+
+- [personal-task-agent/references/yueda-api.md](./skills/personal-task-agent/references/yueda-api.md)
 
 ## Skill Structure
 
